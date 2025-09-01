@@ -16,8 +16,12 @@
 
 
 ### 데모 결과
+
+- Streamlit 버전
+![streamlit_result](images/streamlit_result.png)
+
+
 - Terminal 실행 버전
 ![terminal_result](images/terminal_result.png)
 
-- Streamlit 버전
-![terminal_result](images/streamlit_result.png)
+
