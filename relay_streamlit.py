@@ -55,7 +55,7 @@ st.markdown(
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.8); /* 검은색 반투명 오버레이 */
+        background: rgba(0, 0, 0, 0.5); /* 검은색 반투명 오버레이 */
         z-index: 0;
     }}
     .stApp > div {{
@@ -119,8 +119,12 @@ if st.button("🎤 말하기"):
             ) as response:
                 response.stream_to_file("gpt_reply.mp3")
 
-            os.system("afplay gpt_reply.mp3")   # macOS
-            # os.system("start gpt_reply.mp3")  # Windows
+            #os.system("afplay gpt_reply.mp3")   # macOS
+            # Window에서는 플레이어가 재생되기 때문에 밑에 방식으로 전환
+            audio_file = open("gpt_reply.mp3", "rb")
+            audio_bytes = audio_file.read()
+            st.audio(audio_bytes, format="audio/mp3")
+            
 
     except Exception as e:
         st.error(f"⚠️ 오류: {e}")

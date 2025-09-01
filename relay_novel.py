@@ -83,8 +83,8 @@ with sr.Microphone() as source:
 
             # 5) 재생 (macOS)
             print("봇:", gpt_reply)
-            os.system("afplay gpt_reply.mp3")
-            # Windows → os.system("start gpt_reply.mp3")
+            #os.system("afplay gpt_reply.mp3")
+            os.system("start gpt_reply.mp3") # Windows
 
             # 소리 끝나기 전에 다음 listen 들어가면 피드백 루프 생길 수 있음 → 짧게 대기
             time.sleep(0.1)
