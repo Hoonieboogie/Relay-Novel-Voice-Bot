@@ -21,6 +21,3 @@
 
 - Streamlit 버전
 ![terminal_result](images/streamlit_result.png)
-
-### 한계
-- Streamlit에서는 자동으로 오디오를 재생하게 하는 것이 불가능
