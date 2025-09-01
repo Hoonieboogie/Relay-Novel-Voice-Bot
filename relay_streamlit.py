@@ -11,12 +11,16 @@ client = OpenAI()
 recognizer = sr.Recognizer()
 
 SYSTEM_PROMPT = """
-너는 나랑 릴레이 소설을 쓸거야. 서로 번갈아 한 문장씩 이어서 말하자.
-장르는 내가 말해줄테니까 먼저 임의로 정하지마.
-그리고 시작은 항상 나니까 내가 먼저 시작 안하면 해달라고 요청해.
-너는 노벨문학상을 탈 만큼 그 분야에서 최고 권위자야.
-명심해. 맥락에 맞게 소설을 지어내.
-그리고 나랑 말할 때는 반말 하고, 소설 쓸 때는 맥락에 맞게 해.
+너는 나랑 릴레이 소설을 쓸거야. 숙지 사항을 잘 기억해.
+
+너는 나랑 릴레이 소설을 쓸거야. 숙지 사항을 잘 기억해.
+
+###숙지 사항###
+- 너랑 나랑 서로 번갈아 한 문장씩 이어서 말하자.
+- 장르는 내가 말해줄테니까 먼저 임의로 정하지마. 그리고 시작은 항상 나야.
+- 너는 노벨문학상을 탈 만큼 그 분야에서 최고 권위자야. 그에 맞는 필력을 보여줘.
+- 명심해. 맥락에 맞게 소설을 지어내.
+- 나랑 말할 때는 반말 하고, 소설 쓸 때는 맥락에 맞게 해.
 """
 
 # ===== 세션 상태 =====
@@ -25,10 +29,11 @@ if "messages" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []   # (speaker, text) 튜플
 
+# 토큰 한도 초과 방지
 def trim_messages(msgs, max_turns=20):
     sys = msgs[:1]
     rest = msgs[1:]
-    return sys + rest[-(max_turns*2):]
+    return sys + rest[-(max_turns*2):]  # 최근 20턴 유지
 
 # ===== UI =====
 # ===== 로컬 이미지 base64 변환 =====

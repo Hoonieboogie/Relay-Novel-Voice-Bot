@@ -9,6 +9,8 @@
 import speech_recognition as sr
 from openai import OpenAI
 from dotenv import load_dotenv
+from pydub import AudioSegment
+from pydub.playback import play
 import os, time
 
 # 1) API 키 로드
@@ -20,21 +22,26 @@ recognizer = sr.Recognizer()
 
 # 3) GPT 시스템 프롬프트
 system_prompt = """
-너는 나랑 릴레이 소설을 쓸거야. 서로 번갈아 한 문장씩 이어서 말하자.
-장르는 내가 말해줄테니까 먼저 임의로 정하지마.
-너는 노벨문학상을 탈 만큼 그 분야에서 최고 권위자야.
-명심해. 맥락에 맞게 소설을 지어내.
-그리고 나랑 말할 때는 반말 하고, 소설 쓸 때는 맥락에 맞게 해.
+너는 나랑 릴레이 소설을 쓸거야. 숙지 사항을 잘 기억해.
+
+<숙지 사항>
+- 너랑 나랑 서로 번갈아 한 문장씩 이어서 말하자.
+- 장르는 내가 말해줄테니까 먼저 임의로 정하지마. 그리고 시작은 항상 나야.
+- 너는 노벨문학상을 탈 만큼 그 분야에서 최고 권위자야. 그에 맞는 필력을 보여줘.
+- 명심해. 맥락에 맞게 소설을 지어내.
+- 나랑 말할 때는 반말 하고, 소설 쓸 때는 맥락에 맞게 해.
 """
 messages = [{"role": "system", "content": system_prompt}]
 
+# 토큰 한도 초과 방지 (최근 20턴만 유지)
 def trim_messages(msgs, max_turns=20):
     sys = msgs[:1]
     rest = msgs[1:]
     return sys + rest[-(max_turns*2):]
 
+
 with sr.Microphone() as source:
-    # 🎙 주변 소음 보정
+    # 주변 소음 보정
     print("🎙 주변 소음 보정 중...")
     recognizer.adjust_for_ambient_noise(source, duration=0.5)
     print("✅ 준비 완료! '종료'라고 말하면 끝납니다.")
@@ -81,10 +88,12 @@ with sr.Microphone() as source:
             ) as response:
                 response.stream_to_file("gpt_reply.mp3")
 
-            # 5) 재생 (macOS)
+            # 5) 재생 
             print("봇:", gpt_reply)
             #os.system("afplay gpt_reply.mp3")
-            os.system("start gpt_reply.mp3") # Windows
+            # 윈도우 실행 시
+            audio = AudioSegment.from_file("gpt_reply.mp3", format="mp3")
+            play(audio)
 
             # 소리 끝나기 전에 다음 listen 들어가면 피드백 루프 생길 수 있음 → 짧게 대기
             time.sleep(0.1)
